@@ -2,6 +2,7 @@ package com.example.bank_project.Security;
 
 import com.example.bank_project.Entity.Users;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,14 +20,9 @@ public class MyUserDetails implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles = user.getRole();
-        if (roles == null || roles.isEmpty()) {
-            return Collections.emptySet();
-        }
-        return Arrays.stream(roles.split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return AuthorityUtils.createAuthorityList(user.getRole());
     }
+
     @Override
     public String getPassword() {
         return user.getPassword();

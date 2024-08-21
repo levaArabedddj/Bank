@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Document Information</h1>
+
+<form action="/register/saveDocument" method="POST">
+    <label for="documentType">Document Type:</label>
+    <input type="text" id="documentType" name="documentType" required>
+
+    <label for="documentNumber">Document Number:</label>
+    <input type="text" id="documentNumber" name="documentNumber" required>
+
+    <button type="submit">Save Document</button>
+</form>
+
+<!-- Переход к следующей форме
+<p><a href="address.html">Next: Enter Address Information</a></p> -->
+
+</body>
+</html>

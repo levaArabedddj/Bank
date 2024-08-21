@@ -1,5 +1,9 @@
 package com.example.bank_project.Security;
 
+import com.example.bank_project.Repository.UsersRepo;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,8 +18,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
+
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new MyUserDetailsService();
     }
 
@@ -27,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService()); // Передаем usersRepo
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -36,11 +42,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll() // Разрешить доступ ко всем URL
+                        .requestMatchers("/**").permitAll()
                 )
-                .authenticationProvider(authenticationProvider())
-                .build();
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/register/document", true)  // Это перенаправление на success страницу
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
+                .authenticationProvider(authenticationProvider());
+
+        // Для обработки ошибок аутентификации в версии 6.1+
+        http
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            logger.error("Authentication failed: " + authException.getMessage());
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed");
+                        })
+                );
+
+        return http.build();
     }
+
+
+
 }
