@@ -30,13 +30,25 @@ public class ClientService {
     @Autowired
     private UsersRepo usersRepo;
 
+
     @Transactional
     public void saveDocument(DocumentForm form, Client client) {
+        System.out.println("Saving document for client ID: " + client.getId());
+
         Document document = new Document();
         document.setDocumentType(form.getDocumentType());
         document.setDocumentNumber(form.getDocumentNumber());
         document.setClient(client);
+
+        System.out.println("Document will be saved for client ID: " + client.getId());
         documentRepository.save(document);
+    }
+
+
+
+    // Метод для проверки, существует ли документ у клиента
+    public boolean documentExists(Client client) {
+        return documentRepository.existsByClient(client);
     }
 
     @Transactional
@@ -62,11 +74,20 @@ public class ClientService {
         Optional<Users> optionalUser = usersRepo.findByGmail(email);
         if (optionalUser.isPresent()) {
             Users user = optionalUser.get();
-            return user.getClient(); // Возвращает клиента, связанного с найденным пользователем
+            Client client = user.getClient();
+            if (client != null) {
+                System.out.println("Client found for user: " + email + " with client ID: " + client.getId());
+            } else {
+                System.out.println("No client found for user: " + email);
+            }
+            return client;
+        } else {
+            System.out.println("User not found for email: " + email);
         }
-        return null; // Или выбросите исключение, если пользователь не найден
+        return null;
     }
 
-    }
+
+}
 
 

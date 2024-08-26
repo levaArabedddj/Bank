@@ -49,7 +49,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/register/document", true)  // Это перенаправление на success страницу
+                        .defaultSuccessUrl("/register/document", true)  // Это перенаправление на document страницу
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider());
 
-        // Для обработки ошибок аутентификации в версии 6.1+
+        // Для обработки ошибок аутентификации
         http
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint((request, response, authException) -> {
