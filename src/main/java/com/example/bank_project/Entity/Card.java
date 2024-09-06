@@ -57,6 +57,7 @@ public class Card {
         this.cardType = cardTypes[random.nextInt(cardTypes.length)]; // Случайный выбор типа карты
     }
 
+
     // Генерация 3-значного CVV кода
     public void generateCvv() {
         Random random = new Random();

@@ -21,8 +21,6 @@ public class Users {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Client client;
 
-
-
     @Override
     public int hashCode() {
         return Objects.hash(id); // Не включаем коллекции или другие потенциально рекурсивные поля
