@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
@@ -47,6 +49,30 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> cards;
 
+
+    // Метод для генерации уникального номера аккаунта (12-значное число)
+    public void generateAccountNumber() {
+        StringBuilder accountNumber = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 12; i++) {
+            accountNumber.append(random.nextInt(10));
+        }
+        this.accountNumber = accountNumber.toString();
+    }
+
+    // Метод для установки типа аккаунта (Физическая карта)
+    public void setAccountType() {
+        this.accountType = "Физическая карта";
+    }
+
+    public void setCurrency(){
+        this.currency = "UAH";
+    }
+
+    // Метод для установки текущей даты в качестве даты создания аккаунта
+    public void setCreatedDate() {
+        this.createdDate = LocalDate.now().toString(); // Устанавливаем текущую дату в формате
+    }
 
 }
 

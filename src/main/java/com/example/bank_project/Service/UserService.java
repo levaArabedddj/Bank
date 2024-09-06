@@ -1,14 +1,15 @@
 package com.example.bank_project.Service;
 
-import com.example.bank_project.DAO.AddressForm;
-import com.example.bank_project.DAO.ContactForm;
-import com.example.bank_project.DAO.DocumentForm;
 import com.example.bank_project.Entity.*;
 import com.example.bank_project.Repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -19,6 +20,12 @@ public class UserService {
 
     @Autowired
     private ClientRepo clientRepo;
+
+    @Autowired
+    private CardRepo cardRepo;
+
+    @Autowired
+    private AccountRepo accountRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,7 +45,31 @@ public class UserService {
         user.setClient(client);
 
         usersRepo.save(user);
-        clientRepo.save(client); // Сохранить клиента после пользователя
+        clientRepo.save(client);
+
+
+        Account account = new Account();
+        account.generateAccountNumber();
+        account.setAccountType();
+        account.setCreatedDate();
+        account.setBalance(BigDecimal.ZERO); // баланс нулевой изначально
+        account.setCurrency();
+        account.setClient(client);// связь между клиентом и аккаунтом
+
+
+
+        Card card = new Card();
+        card.generateCardNumber();
+        card.generateCardType();
+        card.generateCvv();
+        card.setAccount(account);// связь между аккаунтом и картой
+        card.setStatus("Active");
+
+
+
+        accountRepo.save(account);
+        cardRepo.save(card);
+
     }
 
 }
