@@ -60,6 +60,12 @@ public class ClientService {
         address.setClient(client);
         addressRepository.save(address);
     }
+    // Метод для проверки, существует ли адрес у клиента
+    public boolean addressExists(Client client) {
+        return addressRepository.existsByClient(client);
+    }
+
+
 
     @Transactional
     public void saveContact(ContactForm form, Client client) {
@@ -68,6 +74,10 @@ public class ClientService {
         contact.setEmail(form.getEmail());
         contact.setClient(client);
         contactRepository.save(contact);
+    }
+    // Метод для проверки, существуют ли контактные данные у клиента
+    public boolean contactExists(Client client) {
+        return contactRepository.existsByClient(client);
     }
 
     public Client getClientByEmail(String email) {

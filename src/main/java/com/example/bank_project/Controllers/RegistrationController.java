@@ -81,9 +81,17 @@ public class RegistrationController {
         if (client == null) {
             return "error";
         }
+
+        // Проверяем, существует ли адрес у клиента
+        if (clientService.addressExists(client)) {
+            System.out.println("Address already exists for user: " + principal.getName());
+            return "redirect:/register/contact"; // Если адрес уже существует, перенаправляем на следующую страницу
+        }
+
         clientService.saveAddress(form, client);
         return "redirect:/register/contact";
     }
+
 
     @PostMapping("/saveContact")
     public String registerContact(@ModelAttribute ContactForm form, Principal principal) {
@@ -91,6 +99,13 @@ public class RegistrationController {
         if (client == null) {
             return "error";
         }
+
+        // Проверяем, существуют ли контакты у клиента
+        if (clientService.contactExists(client)) {
+            System.out.println("Contact already exists for user: " + principal.getName());
+            return "redirect:/mainPageBank"; // Если контакт уже существует, перенаправляем на основную страницу
+        }
+
         clientService.saveContact(form, client);
         return "redirect:/mainPageBank";
     }
